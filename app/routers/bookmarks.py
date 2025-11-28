@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Bookmark, Tag
+from app.models import Bookmark, Tag, User
 from app.schemas import BookmarkCreate, BookmarkUpdate, Bookmark as BookmarkSchema
 
 router = APIRouter()
@@ -44,6 +44,13 @@ async def get_bookmark(bookmark_id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=BookmarkSchema, status_code=status.HTTP_201_CREATED)
 async def create_bookmark(bookmark: BookmarkCreate, db: Session = Depends(get_db)):
     """Create a new bookmark."""
+    user = db.query(User).filter(User.id == bookmark.user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
     db_bookmark = Bookmark(
         url=str(bookmark.url),
         title=bookmark.title,
