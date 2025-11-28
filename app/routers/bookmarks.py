@@ -15,12 +15,19 @@ async def get_bookmarks(
     skip: int = 0, 
     limit: int = 100, 
     user_id: int = None,
+    search: str = None,
     db: Session = Depends(get_db)
 ):
     """Get all bookmarks with optional filtering."""
     query = db.query(Bookmark)
     if user_id:
         query = query.filter(Bookmark.user_id == user_id)
+    if search:
+        search_filter = f"%{search}%"
+        query = query.filter(
+            (Bookmark.title.ilike(search_filter)) | 
+            (Bookmark.description.ilike(search_filter))
+        )
     return query.offset(skip).limit(limit).all()
 
 @router.get("/{bookmark_id}", response_model=BookmarkSchema)
