@@ -30,4 +30,9 @@ app.include_router(tags.router, prefix="/api/tags", tags=["tags"])
 @app.get("/")
 async def root():
     """Health check endpoint."""
-    return {"message": "Smart Bookmark Manager API"}
+    return {"message": "Smart Bookmark Manager API", "status": "healthy"}
+
+@app.get("/health")
+async def health_check():
+    """Detailed health check endpoint."""
+    return {"status": "healthy", "service": "bookmark-manager-api"}
