@@ -22,9 +22,27 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(50), unique=True, index=True, nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=False)
+    gender = Column(String(10), nullable=True, default="male")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     bookmarks = relationship("Bookmark", back_populates="owner", cascade="all, delete-orphan")
+    collections = relationship("Collection", back_populates="owner", cascade="all, delete-orphan")
+
+class Collection(Base):
+    """Collection model for organizing bookmarks."""
+    
+    __tablename__ = "collections"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), nullable=False)
+    description = Column(Text, nullable=True)
+    color = Column(String(7), nullable=True, default="#3B82F6")  # Hex color code
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    owner = relationship("User", back_populates="collections")
+    bookmarks = relationship("Bookmark", back_populates="collection")
 
 class Bookmark(Base):
     """Bookmark model for storing user bookmarks."""
@@ -35,11 +53,14 @@ class Bookmark(Base):
     url = Column(String(2000), nullable=False)
     title = Column(String(500), nullable=False)
     description = Column(Text, nullable=True)
+    summary = Column(Text, nullable=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    collection_id = Column(Integer, ForeignKey("collections.id"), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     owner = relationship("User", back_populates="bookmarks")
+    collection = relationship("Collection", back_populates="bookmarks")
     tags = relationship("Tag", secondary=bookmark_tags, back_populates="bookmarks")
 
 class Tag(Base):
