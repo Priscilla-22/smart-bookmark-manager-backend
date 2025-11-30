@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import bookmarks, tags, users
+from app.routers import bookmarks, tags, users, collections
 from app.database import engine
 from app.models import Base
 
@@ -24,6 +24,7 @@ app.add_middleware(
 )
 
 app.include_router(users.router, prefix="/api/users", tags=["users"])
+app.include_router(collections.router, prefix="/api/collections", tags=["collections"])
 app.include_router(bookmarks.router, prefix="/api/bookmarks", tags=["bookmarks"])
 app.include_router(tags.router, prefix="/api/tags", tags=["tags"])
 
