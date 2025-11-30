@@ -6,9 +6,9 @@ services:
     environment:
       POSTGRES_DB: bookmark_manager
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -27,7 +27,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://postgres:password@db:5432/bookmark_manager
+      DATABASE_URL: postgresql://postgres@db:5432/bookmark_manager
     depends_on:
       - db
 

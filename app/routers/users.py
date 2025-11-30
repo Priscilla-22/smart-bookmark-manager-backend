@@ -42,7 +42,7 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
             detail="User with this username or email already exists"
         )
     
-    db_user = User(username=user.username, email=user.email)
+    db_user = User(username=user.username, email=user.email, gender=user.gender)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -70,6 +70,7 @@ async def update_user(user_id: int, user: UserCreate, db: Session = Depends(get_
     
     db_user.username = user.username
     db_user.email = user.email
+    db_user.gender = user.gender
     db.commit()
     db.refresh(db_user)
     return db_user

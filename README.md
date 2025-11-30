@@ -132,14 +132,6 @@ Future ML endpoints would include:
 - Microservices architecture
 - Load balancing
 
-## Honesty Declaration
-
-I confirm that this submission is my own work. I have:
-- [x] Not copied code from existing solutions or other candidates
-- [x] Used AI assistants only for syntax help and debugging specific errors
-- [x] Not received human help during the assignment period
-- [x] Built the core logic and architecture myself
-- [x] Cited any references used for specific solutions
 
 ## Technologies Used
 
