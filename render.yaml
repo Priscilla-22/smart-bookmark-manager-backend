@@ -2,17 +2,12 @@ services:
   - type: web
     name: smart-bookmark-manager-api
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install -r requirements.txt
+      python migrate_db.py
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: smart-bookmark-db
-          property: connectionString
+        value: postgresql://smart_bookmark_db_user:ZKhFRlrOd3vA5yDVsUdupKPQ9iRHlRUn@dpg-d4m420ogjchc73b1hlg0-a/smart_bookmark_db
       - key: ENVIRONMENT
         value: production
-
-databases:
-  - name: smart-bookmark-db
-    databaseName: bookmarks
-    user: bookmarks_user
