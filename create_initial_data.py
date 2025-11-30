@@ -11,7 +11,7 @@ def create_initial_data():
     """Create some initial data for testing."""
     DATABASE_URL = os.getenv(
         "DATABASE_URL",
-        "postgresql://smart_bookmark_db_user:ZKhFRlrOd3vA5yDVsUdupKPQ9iRHlRUn@dpg-d4m420ogjchc73b1hlg0-a/smart_bookmark_db"
+        "postgresql://smart_bookmark_db_user:ZKhFRlrOd3vA5yDVsUdupKPQ9iRHlRUn@dpg-d4m420ogjchc73b1hlg0-a.oregon-postgres.render.com/smart_bookmark_db"
     )
     
     try:
