@@ -30,6 +30,24 @@ async def get_tag(tag_id: int, db: Session = Depends(get_db)):
         )
     return tag
 
+@router.get("/{tag_id}/usage")
+async def get_tag_usage(tag_id: int, db: Session = Depends(get_db)):
+    """Get information about tag usage."""
+    tag = db.query(Tag).filter(Tag.id == tag_id).first()
+    if not tag:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Tag not found"
+        )
+    
+    bookmark_count = len(tag.bookmarks)
+    return {
+        "tag_id": tag.id,
+        "tag_name": tag.name,
+        "bookmark_count": bookmark_count,
+        "can_delete": bookmark_count == 0
+    }
+
 @router.post("/", response_model=TagSchema, status_code=status.HTTP_201_CREATED)
 async def create_tag(tag: TagCreate, db: Session = Depends(get_db)):
     """Create a new tag."""
@@ -80,6 +98,14 @@ async def delete_tag(tag_id: int, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
             detail="Tag not found"
+        )
+    
+    # Check if tag is being used by any bookmarks
+    if db_tag.bookmarks:
+        bookmark_count = len(db_tag.bookmarks)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Cannot delete tag '{db_tag.name}' as it is used by {bookmark_count} bookmark(s). Remove the tag from all bookmarks first."
         )
     
     db.delete(db_tag)
