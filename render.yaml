@@ -5,6 +5,7 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       python migrate_db.py
+      python create_initial_data.py
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
